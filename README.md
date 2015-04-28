@@ -1,11 +1,16 @@
-# Branch-iOS-Invite-SDK
+# YesGraph-Branch-iOS-Invite-SDK
+
+This is our fork of
+[Branch-iOS-Invite-SDK](https://github.com/BranchMetrics/Branch-iOS-Invite-SDK)
+to provide an iOS SDK that provides an 'invite feature' while
+integrating YesGraph.
 
 The purpose of this SDK is to provide an out-of-the-box functional 'invite feature' for apps consuming the Branch SDK that want to utilize a standard invite feature in their app.
 
 There will still be some configuration on the dashboard, but the goal is to provide the most extensible, yet simple to use, full invite feature SDK. To see the basics of setting up an app with Branch, check out [the Branch iOS SDK readme](https://github.com/BranchMetrics/Branch-iOS-SDK).
 
 # Invite Flow
-In your app, there will be a trigger to open the Invite UI. This will show a list of contacts and allow the user to select friends they want to invite to join them.  
+In your app, there will be a trigger to open the Invite UI. This will show a list of contacts and allow the user to select friends they want to invite to join them.
 
 ![Invite](https://s3-us-west-1.amazonaws.com/branchhost/invite_sdk_1.gif)
 
@@ -70,9 +75,9 @@ After you register your app, your app key can be retrieved on the [Settings](htt
 
 ### 3. Initialization and Showing the Personalized Welcome
 
-Branch must be started within your app before any calls can be made to the SDK.  
-  
-On top of the regular setup for a Branch app, you should add a check within the init callback to check whether the welcome screen should be shown. By default, the BranchWelcomeViewController will determine this based on keys in the Branch initialization dictionary.  
+Branch must be started within your app before any calls can be made to the SDK.
+
+On top of the regular setup for a Branch app, you should add a check within the init callback to check whether the welcome screen should be shown. By default, the BranchWelcomeViewController will determine this based on keys in the Branch initialization dictionary.
 
 Modify the following two methods in your App Delegate:
 
@@ -93,7 +98,7 @@ Modify the following two methods in your App Delegate:
         if (!error) {
             // params are the deep linked params associated with the link that the user clicked -> was re-directed to this app
             // params will be empty if no data found
-            // ... insert custom logic here ...   
+            // ... insert custom logic here ...
         }
 
         if ([BranchWelcomeViewController shouldShowWelcome:params]) {
@@ -121,13 +126,13 @@ Modify the following two methods in your App Delegate:
 func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
     // anything else you need to do in this method
     // ...
-    
+
     let branch: Branch = Branch.getInstance()
     branch.initSessionWithLaunchOptions(launchOptions, andRegisterDeepLinkHandler: { params, error in
         if (error == nil) {
             // params are the deep linked params associated with the link that the user clicked -> was re-directed to this app
             // params will be empty if no data found
-            // ... insert custom logic here ...   
+            // ... insert custom logic here ...
         }
 
         if (BranchWelcomeViewController.shouldShowWelcome(params)) {
@@ -136,7 +141,7 @@ func application(application: UIApplication, didFinishLaunchingWithOptions launc
             self.window.rootViewController.presentViewController(welcomeController animated:YES completion:NULL);
         }
     })
-        
+
     return true
 }
 ```
@@ -148,7 +153,7 @@ func application(application: UIApplication, openURL url: NSURL, sourceApplicati
     if (!Branch.getInstance().handleDeepLink(url)) {
         // do other deep link routing for the Facebook SDK, Pinterest SDK, etc
     }
-        
+
     return true
 }
 ```
@@ -190,7 +195,7 @@ First, to customize the channels that the user will have to invite their friends
     return @[
         // SMS provider
         [BranchInviteTextContactProvider textContactProviderWithInviteMessageFormat:@"Check out my demo app with Branch:\n\n%@!"]
-        
+
         // Email provider
         //[BranchInviteEmailContactProvider emailContactProviderWithSubject:@"Check out this demo app!" inviteMessageFormat:@"Check out my demo app with Branch:\n\n%@!"],
 
@@ -204,7 +209,7 @@ Secondly, you must choose the parameters that will be shown in the personalized 
 
 ```objc
 
-// The full name of the inviting user, which is displayed in the welcome screen. 
+// The full name of the inviting user, which is displayed in the welcome screen.
 // Required
 - (NSString *)invitingUserFullname {
     return @"Graham Mueller";
@@ -232,7 +237,7 @@ Secondly, you must choose the parameters that will be shown in the personalized 
 Lastly, here is where you can customize special parameters that tune the functionality of a Branch link. Below the code snippet is the table of preset keys with the specific type of functionality that they provide
 
 ```objc
-// The BranchInvite will create a pretty generic Branch short url. 
+// The BranchInvite will create a pretty generic Branch short url.
 // This hook allows you to provide any additional data you desire.
 - (NSDictionary *)inviteUrlCustomData {
     NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
@@ -255,7 +260,7 @@ You can customize the Facebook OG tags of each URL if you want to dynamically sh
 | "$og_title" | The title you'd like to appear for the link in social media
 | "$og_description" | The description you'd like to appear for the link in social media
 | "$og_image_url" | The URL for the image you'd like to appear for the link in social media
-| "$og_video" | The URL for the video 
+| "$og_video" | The URL for the video
 | "$og_url" | The URL you'd like to appear
 | "$og_app_id" | Your OG app ID. Optional and rarely used.
 
@@ -276,7 +281,7 @@ You have the ability to control the direct deep linking of each link by insertin
 
 | Key | Value
 | --- | ---
-| "$deeplink_path" | The value of the deep link path that you'd like us to append to your URI. For example, you could specify "$deeplink_path": "radio/station/456" and we'll open the app with the URI "yourapp://radio/station/456?link_click_id=branch-identifier". This is primarily for supporting legacy deep linking infrastructure. 
+| "$deeplink_path" | The value of the deep link path that you'd like us to append to your URI. For example, you could specify "$deeplink_path": "radio/station/456" and we'll open the app with the URI "yourapp://radio/station/456?link_click_id=branch-identifier". This is primarily for supporting legacy deep linking infrastructure.
 | "$always_deeplink" | true or false. (default is not to deep link first) This key can be specified to have our linking service force try to open the app, even if we're not sure the user has the app installed. If the app is not installed, we fall back to the respective app store or $platform_url key. By default, we only open the app if we've seen a user initiate a session in your app from a Branch link (has been cookied and deep linked by Branch)
 
 
@@ -286,7 +291,7 @@ Both the invite and welcome screens can be customized.
 #### Invite Display
 We've designed the invite screen to be attractive and intuitive, at least in our opinion. You may feel differently, but don't worry -- we provide hooks for you to customize the appearance.
 
-* Segmented Control  
+* Segmented Control
 We utilize an HMSegmentedControl to list out the contact providers. One of the hooks allows you to customize the segmented control however you like. Note, however, that any events you add, or segments you provide in this configuration method will be removed.
 
 * TableViewCell Customization
